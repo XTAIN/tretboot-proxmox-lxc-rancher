@@ -13,3 +13,5 @@ helm:
       watchIngressWithoutClass: true
       setAsDefaultIngress: true
       hostNetwork: true
+      service:
+        type: ""
