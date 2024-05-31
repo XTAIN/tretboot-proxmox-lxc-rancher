@@ -92,7 +92,7 @@ metadata:
   name: tretboot-config
   namespace: tretboot
 data:
-  repository: "git@github.com:Deltachaos/tretboot-lxc-rancher.git"
+  repository: "https://github.com/Deltachaos/tretboot-proxmox-lxc-rancher.git"
 EOF
 ) | pct exec $id -- tee -a /var/lib/rancher/k3s/server/manifests/tretboot.yaml
 pct exec $id -- ln -s /usr/local/bin/k3s /usr/bin/k3s
