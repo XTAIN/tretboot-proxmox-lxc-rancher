@@ -102,6 +102,9 @@ data:
   path: "tretboot"
   rancher.yaml: |
     hostname: $hostname
+  tretboot-fleet.yaml: |
+    repository:
+      url: "$repository"
 EOF
 ) | pct exec $id -- tee -a /var/lib/rancher/k3s/server/manifests/tretboot.yaml
 pct exec $id -- ln -s /usr/local/bin/k3s /usr/bin/k3s
