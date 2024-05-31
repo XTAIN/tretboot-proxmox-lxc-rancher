@@ -1,12 +1,14 @@
 #!/bin/bash
 
+
+hostname=rancher
+network=name=eth0,firewall=1,bridge=vmbr0,ip=172.30.13.101/20,gw=172.30.0.1
+
+id=8000
 storage=local-btrfs
+
+repository=https://github.com/Deltachaos/tretboot-proxmox-lxc-rancher.git
 image=ubuntu-24.04-standard_24.04-2_amd64.tar.zst
-hostname=k8s.deltachaos.de
-bridge=vmbr0
-ip=172.30.13.101/20
-gw=172.30.0.1
-id=101
 k3s_version=v1.28.10+k3s1
 
 pveam update
@@ -44,7 +46,7 @@ lxc.mount.auto: "proc:rw sys:rw"
 EOF
 ) | cat - >> /etc/pve/lxc/$id.conf
 pct start $id
-pct set $id --net0 name=eth0,firewall=1,bridge=$bridge,ip=$ip,gw=$gw
+pct set $id --net0 $network
 pct exec $id -- mkdir -p /var/lib/rancher/k3s/server/manifests
 pct exec $id -- mkdir -p /etc/rancher/k3s
 (cat <<EOF
@@ -92,7 +94,8 @@ metadata:
   name: tretboot-config
   namespace: tretboot
 data:
-  repository: "https://github.com/Deltachaos/tretboot-proxmox-lxc-rancher.git"
+  repository: "$repository"
+  path: "tretboot"
 EOF
 ) | pct exec $id -- tee -a /var/lib/rancher/k3s/server/manifests/tretboot.yaml
 pct exec $id -- ln -s /usr/local/bin/k3s /usr/bin/k3s

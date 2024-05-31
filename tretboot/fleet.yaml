@@ -1,0 +1,8 @@
+defaultNamespace: cattle-system
+
+helm:
+  chart: rancher
+  repo: https://releases.rancher.com/server-charts/stable
+  disableUpdate: true
+  values:
+    hostname: rancher
