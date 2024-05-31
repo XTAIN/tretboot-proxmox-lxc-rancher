@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-hostname=rancher
+hostname=rancher.$(hostname -d)
 network=name=eth0,firewall=1,bridge=vmbr0,ip=172.30.13.101/20,gw=172.30.0.1
 
 id=8000
@@ -96,6 +96,8 @@ metadata:
 data:
   repository: "$repository"
   path: "tretboot"
+  rancher.yaml: |
+    hostname: $hostname
 EOF
 ) | pct exec $id -- tee -a /var/lib/rancher/k3s/server/manifests/tretboot.yaml
 pct exec $id -- ln -s /usr/local/bin/k3s /usr/bin/k3s
