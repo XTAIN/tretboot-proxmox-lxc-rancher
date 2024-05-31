@@ -1,0 +1,15 @@
+defaultNamespace: ingress-nginx
+
+helm:
+  chart: ingress-nginx
+  repo: https://kubernetes.github.io/ingress-nginx
+  disableUpdate: false
+
+  values:
+    rbac:
+      create: true
+    controller:
+      kind: DaemonSet
+      watchIngressWithoutClass: true
+      setAsDefaultIngress: true
+      hostNetwork: true
