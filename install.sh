@@ -139,4 +139,6 @@ data:
 EOF
 ) | pct exec $id -- tee -a /var/lib/rancher/k3s/server/manifests/tretboot.yaml
 pct exec $id -- ln -s /usr/local/bin/k3s /usr/bin/k3s
+pct exec $id -- ln -s /usr/local/bin/kubectl /usr/bin/kubectl
+pct exec $id -- ln -s /usr/local/bin/crictl /usr/bin/crictl
 pct exec $id -- /bin/sh -c "wget -O - https://get.k3s.io | INSTALL_K3S_VERSION=${k3s_version} sh -"
