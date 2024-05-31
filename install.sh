@@ -7,6 +7,7 @@ network=name=eth0,firewall=1,bridge=vmbr0,ip=172.30.13.101/20,gw=172.30.0.1
 id=8000
 storage=local-btrfs
 
+size=64
 repository=https://github.com/Deltachaos/tretboot-proxmox-lxc-rancher.git
 image=ubuntu-24.04-standard_24.04-2_amd64.tar.zst
 k3s_version=v1.28.10+k3s1
@@ -37,7 +38,7 @@ while read p; do
   modprobe "$p"
 done </etc/modules-load.d/docker.conf
 
-pct create $id $storage:vztmpl/$image --cores 2 --memory 4096 --swap 2048 --rootfs ${storage}:8 --hostname=$hostname --onboot 1
+pct create $id $storage:vztmpl/$image --cores 2 --memory 4096 --swap 2048 --rootfs ${storage}:${size} --hostname=$hostname --onboot 1
 (cat <<EOF
 lxc.apparmor.profile: unconfined
 lxc.cgroup2.devices.allow: a
