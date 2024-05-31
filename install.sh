@@ -11,8 +11,8 @@ if [ -z "${bridge}" ]; then
   bridge=${default_bridge}
 fi
 
-ip="dhcp"
-ip6="dhcp"
+ip=${ip:-dhcp}
+ip6=${ip6:-}
 default_network="name=eth0,firewall=${firewall},bridge=${bridge}"
 
 if [ "${ip}" ]; then
