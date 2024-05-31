@@ -4,7 +4,24 @@ default_storage=$(pvesm status --content rootdir | grep active | cut -d' ' -f1)
 default_hostname=rancher.$(hostname -d)
 default_id=$(pvesh get /cluster/nextid)
 default_bridge=$(brctl show | awk 'NR>1 {print $1}' | grep vmbr | head -n1)
-default_network="name=eth0,firewall=1,bridge=${default_bridge},ip=dhcp,ip6=dhcp"
+
+firewall=${firewall:-1}
+
+if [ -z "${bridge}" ]; then
+  bridge=${default_bridge}
+fi
+
+ip="dhcp"
+ip6="dhcp"
+default_network="name=eth0,firewall=${firewall},bridge=${bridge}"
+
+if [ "${ip}" ]; then
+  default_network="${default_network},ip=${ip}"
+fi
+
+if [ "${ip6}" ]; then
+  default_network="${default_network},ip6=${ip6}"
+fi
 
 if [ -z "${hostname}" ]; then
   hostname=${default_hostname}
