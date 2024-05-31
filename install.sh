@@ -1,16 +1,19 @@
 #!/bin/bash
 
 
-hostname=rancher.$(hostname -d)
-network=name=eth0,firewall=1,bridge=vmbr0,ip=172.30.13.101/20,gw=172.30.0.1
+default_hostname=rancher.$(hostname -d)
+if [ -z "${hostname}" ]; then
+  hostname=${default_hostname}
+fi
+network=${network:-name=eth0,firewall=1,bridge=vmbr0,ip=172.30.13.101/20,gw=172.30.0.1}
 
-id=8000
-storage=local-btrfs
+id=${id:-8000}
+storage=${storage:-local-btrfs}
 
-size=64
-repository=https://github.com/Deltachaos/tretboot-proxmox-lxc-rancher.git
-image=ubuntu-24.04-standard_24.04-2_amd64.tar.zst
-k3s_version=v1.28.10+k3s1
+size=${size:-64}
+repository=${repository:-https://github.com/Deltachaos/tretboot-proxmox-lxc-rancher.git}
+image=${image:-ubuntu-24.04-standard_24.04-2_amd64.tar.zst}
+k3s_version=${k3s_version:-v1.28.10+k3s1}
 
 pveam update
 pveam download $storage $image
