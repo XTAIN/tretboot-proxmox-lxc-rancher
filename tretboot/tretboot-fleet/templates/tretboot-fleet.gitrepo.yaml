@@ -1,0 +1,17 @@
+{{ if .Values.repository.url }}
+apiVersion: fleet.cattle.io/v1alpha1
+kind: GitRepo
+metadata:
+  name: tretboot-fleet
+spec:
+  branch: {{ .Values.repository.branch | quote }}
+  correctDrift:
+    enabled: false
+  forceSyncGeneration: 2
+  insecureSkipTLSVerify: false
+  paths:
+    - local/*
+  repo: {{ .Values.repository.url | quote }}
+  targets:
+    - clusterName: local
+  {{ end }}
