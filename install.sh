@@ -1,14 +1,23 @@
 #!/bin/bash
 
-
+default_storage=$(pvesm status --content rootdir | grep active | cut -d' ' -f1)
 default_hostname=rancher.$(hostname -d)
+default_id=$(pvesh get /cluster/nextid)
+default_bridge=$(brctl show | awk 'NR>1 {print $1}' | grep vmbr | head -n1)
+default_network="name=eth0,firewall=1,bridge=${default_bridge},ip=dhcp,ip6=dhcp"
+
 if [ -z "${hostname}" ]; then
   hostname=${default_hostname}
 fi
-network=${network:-name=eth0,firewall=1,bridge=vmbr0,ip=172.30.13.101/20,gw=172.30.0.1}
-
-id=${id:-8000}
-storage=${storage:-local-btrfs}
+if [ -z "${network}" ]; then
+  network=${default_network}
+fi
+if [ -z "${storage}" ]; then
+  storage=${default_storage}
+fi
+if [ -z "${id}" ]; then
+  id=${default_id}
+fi
 
 size=${size:-64}
 repository=${repository:-https://github.com/Deltachaos/tretboot-proxmox-lxc-rancher.git}
@@ -40,6 +49,11 @@ sysctl net.netfilter.nf_conntrack_max=786432
 while read p; do
   modprobe "$p"
 done </etc/modules-load.d/docker.conf
+
+if pct status $id || qm status $id; then
+   echo "VM with $id already exists." > /dev/stderr
+   exit 1
+fi
 
 pct create $id $storage:vztmpl/$image --cores 2 --memory 4096 --swap 2048 --rootfs ${storage}:${size} --hostname=$hostname --onboot 1
 (cat <<EOF
