@@ -108,6 +108,7 @@ configmap_extra_repositories=""
 
 i=0
 while true; do
+  fleet_name=$(eval echo \${local_fleet_${i}_name})
   fleet_repo=$(eval echo \${local_fleet_${i}_repo})
   fleet_branch=$(eval echo \${local_fleet_${i}_branch:-main})
   fleet_path=$(eval echo \${local_fleet_${i}_path:-""})
@@ -117,11 +118,16 @@ while true; do
     break
   fi
 
+  if [ -z "${fleet_name}" ]; then
+    break
+  fi
+
   configmap_extra_repositories="$(cat - <<EOF
-      - repo: "${fleet_repo}"
-        branch: "${fleet_branch}"
-        path: "${fleet_path}"
-        auth: "${fleet_auth}"
+      ${fleet_name}:
+          repo: "${fleet_repo}"
+          branch: "${fleet_branch}"
+          path: "${fleet_path}"
+          auth: "${fleet_auth}"
 $configmap_extra_repositories
 EOF
 )"

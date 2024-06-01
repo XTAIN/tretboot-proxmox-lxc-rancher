@@ -7,3 +7,5 @@ fullnameOverride: ""
 repository:
   url: ""
   branch: "main"
+
+extraRepositories: []

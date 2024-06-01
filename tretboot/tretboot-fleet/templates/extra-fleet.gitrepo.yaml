@@ -1,0 +1,18 @@
+{{- range $name, $data := .Values.extraRepositories }}
+apiVersion: fleet.cattle.io/v1alpha1
+kind: GitRepo
+metadata:
+  name: tretboot-fleet-{{ $name }}
+spec:
+  branch: {{ $data.branch | quote }}
+  correctDrift:
+    enabled: false
+  forceSyncGeneration: 2
+  insecureSkipTLSVerify: false
+  paths:
+    - {{ $data.path | quote }}
+  repo: {{ $data.repo | quote }}
+  targets:
+    - clusterName: local
+---
+{{- end }}
