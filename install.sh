@@ -52,7 +52,10 @@ if [ "${proxmox_api}" == "1" ]; then
   fi
 
   if [ "${proxmox_api_create_user}" == "1" ]; then
-    pveum user add "${proxmox_api_username}" --password "${proxmox_api_password}"
+    if ! pveum user add "${proxmox_api_username}" --password "${proxmox_api_password}"; then
+      echo "Error creating API user" > /dev/stderr
+      exit 1
+    fi
     pveum aclmod / -user "${proxmox_api_username}" -role Administrator
   fi;
 fi;
@@ -146,8 +149,10 @@ EOF
   fleet_ssh_key_public=$(ssh-keygen -y -f "$temp_private_key")
   rm -f "$temp_private_key"
 
+  fleet_ssh_key_private=$(cat $temp_private_key | awk '{printf "%s\\n", $0}')
+
   configmap_git_ssh="$(cat - <<EOF
-    ssh: {"private": "${fleet_ssh_key}","public":"${fleet_ssh_key_public}"}
+    ssh: {"private": "${fleet_ssh_key_private}","public":"${fleet_ssh_key_public}"}
 EOF
 )"
 fi
