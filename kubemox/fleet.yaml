@@ -11,5 +11,5 @@ helm:
   valuesFrom:
     - configMapKeyRef:
         name: kubemox-values
-        namespace: tretboot
+        namespace: fleet-local
         key: yaml
