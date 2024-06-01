@@ -9,6 +9,9 @@ spec:
     enabled: false
   forceSyncGeneration: 2
   insecureSkipTLSVerify: false
+{{ if and $data.auth }}
+  clientSecretName: fleet-auth
+{{ end }}
   paths:
     - {{ $data.path | quote }}
   repo: {{ $data.repo | quote }}

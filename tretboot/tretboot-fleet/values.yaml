@@ -9,3 +9,7 @@ repository:
   branch: "main"
 
 extraRepositories: []
+
+ssh:
+  private: ""
+  public: ""
