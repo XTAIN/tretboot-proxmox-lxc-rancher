@@ -138,15 +138,14 @@ done
 configmap_git_ssh=""
 if [ "${fleet_ssh_key}" ]; then
   temp_private_key=$(mktemp)
+  chmod 600 "$temp_private_key"
   tee "$temp_private_key" <<EOF
 $fleet_ssh_key
 EOF
-  chmod 600 "$temp_private_key"
 
   fleet_ssh_key_public=$(ssh-keygen -y -f "$temp_private_key")
   rm -f "$temp_private_key"
 
-  fleet_ssh_key_public=
   configmap_git_ssh="$(cat - <<EOF
     ssh: {"private": "${fleet_ssh_key}","public":"${fleet_ssh_key_public}"}
 EOF
