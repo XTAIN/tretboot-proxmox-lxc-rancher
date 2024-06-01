@@ -8,7 +8,8 @@ data:
   username: {{ .Values.proxmox.username | quote }}
   password: {{ .Values.proxmox.password | quote }}
   yaml: |
-    endpoint: {{ .Values.proxmox.endpoint | quote }}
-    username: {{ .Values.proxmox.username | quote }}
-    password: {{ .Values.proxmox.password | quote }}
+    proxmox:
+      endpoint: {{ .Values.proxmox.endpoint | quote }}
+      username: {{ .Values.proxmox.username | quote }}
+      password: {{ .Values.proxmox.password | quote }}
 {{ end }}
