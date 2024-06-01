@@ -112,7 +112,7 @@ while true; do
   fleet_repo=$(eval echo \${local_fleet_${i}_repo})
   fleet_branch=$(eval echo \${local_fleet_${i}_branch:-main})
   fleet_path=$(eval echo \${local_fleet_${i}_path:-""})
-  fleet_auth=$(eval echo \${local_fleet_${i}_auth:-"true"})
+  fleet_auth=$(eval echo \${local_fleet_${i}_auth:-true})
 
   if [ -z "${fleet_repo}" ]; then
     break

@@ -9,11 +9,13 @@ spec:
     enabled: false
   forceSyncGeneration: 2
   insecureSkipTLSVerify: false
-{{ if and $data.auth }}
+{{ if $data.auth }}
   clientSecretName: fleet-auth
 {{ end }}
+{{ if $data.path }}
   paths:
     - {{ $data.path | quote }}
+{{ end }}
   repo: {{ $data.repo | quote }}
   targets:
     - clusterName: local
