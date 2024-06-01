@@ -13,3 +13,8 @@ extraRepositories: []
 ssh:
   private: ""
   public: ""
+
+proxmox:
+  host: ""
+  username: ""
+  password: ""

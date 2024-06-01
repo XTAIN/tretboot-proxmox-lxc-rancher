@@ -1,4 +1,4 @@
-{{ if .Values.proxmox.endpoint }}
+{{ if .Values.proxmox.host }}
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -6,7 +6,7 @@ metadata:
 data:
   yaml: |
     proxmox:
-      endpoint: {{ .Values.proxmox.endpoint | quote }}
+      endpoint: {{ .Values.proxmox.host | quote }}
       username: {{ .Values.proxmox.username | quote }}
       password: {{ .Values.proxmox.password | quote }}
 {{ end }}

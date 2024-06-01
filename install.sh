@@ -41,8 +41,8 @@ proxmox_api=${proxmox_api:-1}
 proxmox_api_create_user=${proxmox_api_create_user:-1}
 
 if [ "${proxmox_api}" == "1" ]; then
-  if [ -z "${proxmox_api_endpoint}" ]; then
-    proxmox_api_endpoint="https://${host_ip_addr}:8006/"
+  if [ -z "${proxmox_api_host}" ]; then
+    proxmox_api_host="${host_ip_addr}"
   fi
   if [ -z "${proxmox_api_username}" ]; then
     proxmox_api_username="rancher@pve"
@@ -100,7 +100,7 @@ configmap_proxmox_api=""
 if [ "${proxmox_api}" == "1" ]; then
   configmap_proxmox_api="$(cat - <<EOF
     proxmox:
-      endpoint: "$proxmox_api_endpoint"
+      host: "$proxmox_api_host"
       username: "$proxmox_api_username"
       password: "$proxmox_api_password"
 EOF
