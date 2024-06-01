@@ -111,6 +111,7 @@ while true; do
   fleet_repo=$(eval echo \${local_fleet_${i}_repo})
   fleet_branch=$(eval echo \${local_fleet_${i}_branch:-main})
   fleet_path=$(eval echo \${local_fleet_${i}_path:-""})
+  fleet_auth=$(eval echo \${local_fleet_${i}_auth:-"true"})
 
   if [ -z "${fleet_repo}" ]; then
     break
@@ -120,6 +121,7 @@ while true; do
       - repo: "${fleet_repo}"
         branch: "${fleet_branch}"
         path: "${fleet_path}"
+        auth: "${fleet_auth}"
 $configmap_extra_repositories
 EOF
 )"
