@@ -1,5 +1,6 @@
 #!/bin/bash
 
+host_ip_addr=$(hostname -I | awk '{print $1}')
 default_storage=$(pvesm status --content rootdir | grep active | cut -d' ' -f1)
 default_hostname=rancher.$(hostname -d)
 default_id=$(pvesh get /cluster/nextid)
@@ -36,6 +37,26 @@ if [ -z "${id}" ]; then
   id=${default_id}
 fi
 
+proxmox_api=${proxmox_api:-1}
+proxmox_api_create_user=${proxmox_api_create_user:-1}
+
+if [ "${proxmox_api}" == "1" ]; then
+  if [ -z "${proxmox_api_endpoint}" ]; then
+    proxmox_api_endpoint="https://${ip_addr}:8006/"
+  fi
+  if [ -z "${proxmox_api_username}" ]; then
+    proxmox_api_username="rancher@pve"
+  fi
+  if [ -z "${proxmox_api_password}" ]; then
+    proxmox_api_password=$(openssl rand -base64 18)
+  fi
+
+  if [ "${proxmox_api_create_user}" == "1" ]; then
+    pveum user add "${proxmox_api_username}" --password "${proxmox_api_password}"
+    pveum aclmod / -user "${proxmox_api_username}" -role Administrator
+  fi;
+fi;
+
 size=${size:-64}
 repository=${repository:-https://github.com/Deltachaos/tretboot-proxmox-lxc-rancher.git}
 image=${image:-ubuntu-24.04-standard_24.04-2_amd64.tar.zst}
@@ -71,6 +92,40 @@ if pct status $id || qm status $id; then
    echo "VM with $id already exists." > /dev/stderr
    exit 1
 fi
+
+configmap_proxmox_api=""
+if [ "${proxmox_api}" == "1" ]; then
+  configmap_proxmox_api="$(cat - <<EOF
+    proxmox:
+      endpoint: "$proxmox_api_endpoint"
+      username: "$proxmox_api_username"
+      password: "$proxmox_api_password"
+EOF
+)"
+fi
+
+configmap_extra_repositories=""
+
+i=0
+while true; do
+  fleet_repo=$(eval echo \${local_fleet_$i_repo})
+  fleet_branch=$(eval echo \${local_fleet_$i_branch:-main})
+  fleet_path=$(eval echo \${local_fleet_$i_path:-""})
+
+  if [ -z "${fleet_repo}" ]; then
+    break
+  fi
+
+  configmap_extra_repositories="$(cat - <<EOF
+    - repo: "${fleet_repo}"
+      branch: "${fleet_branch}"
+      path: "${fleet_path}"
+$configmap_extra_repositories
+EOF
+)"
+
+  ((i++))
+done
 
 pct create $id $storage:vztmpl/$image --cores 2 --memory 4096 --swap 2048 --rootfs ${storage}:${size} --hostname=$hostname --onboot 1
 (cat <<EOF
@@ -134,8 +189,11 @@ data:
   rancher.yaml: |
     hostname: $hostname
   tretboot-fleet.yaml: |
+    extraRepositories:
     repository:
       url: "$repository"
+$configmap_extra_repositories
+$configmap_proxmox_api
 EOF
 ) | pct exec $id -- tee -a /var/lib/rancher/k3s/server/manifests/tretboot.yaml
 pct exec $id -- ln -s /usr/local/bin/k3s /usr/bin/k3s
