@@ -147,9 +147,8 @@ $fleet_ssh_key
 EOF
 
   fleet_ssh_key_public=$(ssh-keygen -y -f "$temp_private_key")
-  rm -f "$temp_private_key"
-
   fleet_ssh_key_private=$(cat $temp_private_key | awk '{printf "%s\\n", $0}')
+  rm -f "$temp_private_key"
 
   configmap_git_ssh="$(cat - <<EOF
     ssh: {"private": "${fleet_ssh_key_private}","public":"${fleet_ssh_key_public}"}
