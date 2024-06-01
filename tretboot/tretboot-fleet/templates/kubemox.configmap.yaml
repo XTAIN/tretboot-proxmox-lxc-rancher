@@ -1,0 +1,12 @@
+{{ if .Values.proxmox.endpoint }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kubemox-values
+data:
+  yaml: |
+    proxmox:
+      endpoint: {{ .Values.proxmox.endpoint | quote }}
+      username: {{ .Values.proxmox.username | quote }}
+      password: {{ .Values.proxmox.password | quote }}
+{{ end }}

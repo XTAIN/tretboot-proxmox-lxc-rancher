@@ -8,3 +8,8 @@ helm:
   values:
     proxmox:
       insecureSkipTLSVerify: true
+  valuesFrom:
+    - configMapKeyRef:
+        name: kubemox-values
+        namespace: tretboot
+        key: yaml

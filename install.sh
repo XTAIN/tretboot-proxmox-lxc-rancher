@@ -99,7 +99,6 @@ fi
 configmap_proxmox_api=""
 if [ "${proxmox_api}" == "1" ]; then
   configmap_proxmox_api="$(cat - <<EOF
-  kubemox.yaml: |
     proxmox:
       endpoint: "$proxmox_api_endpoint"
       username: "$proxmox_api_username"
@@ -228,7 +227,6 @@ metadata:
 data:
   repository: "$repository"
   path: "tretboot"
-$configmap_proxmox_api
   rancher.yaml: |
     hostname: $hostname
   tretboot-fleet.yaml: |
@@ -237,6 +235,7 @@ $configmap_proxmox_api
     extraRepositories:
 $configmap_kubemox
 $configmap_extra_repositories
+$configmap_proxmox_api
 $configmap_git_ssh
 EOF
 ) | pct exec $id -- tee -a /var/lib/rancher/k3s/server/manifests/tretboot.yaml
