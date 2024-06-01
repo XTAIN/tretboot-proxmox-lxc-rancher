@@ -1,0 +1,16 @@
+defaultNamespace: kubemox
+
+helm:
+  chart: kubemox
+  repo: https://alperencelik.github.io/helm-charts
+  version: v0.0.6-rc2
+
+  values:
+    proxmox:
+      insecureSkipTLSVerify: false
+
+  valuesFrom:
+    - configMapKeyRef:
+        name: proxmox-auth
+        namespace: fleet-local
+        key: yaml
