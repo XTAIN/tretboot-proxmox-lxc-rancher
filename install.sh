@@ -42,7 +42,7 @@ proxmox_api_create_user=${proxmox_api_create_user:-1}
 
 if [ "${proxmox_api}" == "1" ]; then
   if [ -z "${proxmox_api_endpoint}" ]; then
-    proxmox_api_endpoint="https://${ip_addr}:8006/"
+    proxmox_api_endpoint="https://${host_ip_addr}:8006/"
   fi
   if [ -z "${proxmox_api_username}" ]; then
     proxmox_api_username="rancher@pve"
@@ -108,9 +108,9 @@ configmap_extra_repositories=""
 
 i=0
 while true; do
-  fleet_repo=$(eval echo \${local_fleet_$i_repo})
-  fleet_branch=$(eval echo \${local_fleet_$i_branch:-main})
-  fleet_path=$(eval echo \${local_fleet_$i_path:-""})
+  fleet_repo=$(eval echo \${local_fleet_${i}_repo})
+  fleet_branch=$(eval echo \${local_fleet_${i}_branch:-main})
+  fleet_path=$(eval echo \${local_fleet_${i}_path:-""})
 
   if [ -z "${fleet_repo}" ]; then
     break
@@ -189,9 +189,9 @@ data:
   rancher.yaml: |
     hostname: $hostname
   tretboot-fleet.yaml: |
-    extraRepositories:
     repository:
       url: "$repository"
+    extraRepositories:
 $configmap_extra_repositories
 $configmap_proxmox_api
 EOF
