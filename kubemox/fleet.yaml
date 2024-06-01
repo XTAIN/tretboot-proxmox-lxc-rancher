@@ -1,7 +1,7 @@
 defaultNamespace: kubemox
 
 helm:
-  chart: git::https://github.com/alperencelik/kubemox//charts/kubemox?ref=main
+  chart: git::https://github.com/Deltachaos/kubemox//charts/kubemox?ref=fork
   version: 0.1.0
 
   values:
