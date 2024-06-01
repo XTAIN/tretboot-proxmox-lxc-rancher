@@ -61,6 +61,7 @@ if [ "${proxmox_api}" == "1" ]; then
 fi;
 
 size=${size:-64}
+tretboot_url=${tretboot_url:-https://raw.githubusercontent.com/Deltachaos/tretboot/main/tretboot.yaml}
 repository=${repository:-https://github.com/Deltachaos/tretboot-proxmox-lxc-rancher.git}
 image=${image:-ubuntu-24.04-standard_24.04-2_amd64.tar.zst}
 k3s_version=${k3s_version:-v1.28.10+k3s1}
@@ -216,7 +217,7 @@ disable:
   - local-storage
 EOF
 ) | pct exec $id -- tee /etc/rancher/k3s/config.yaml
-pct exec $id -- wget -O /var/lib/rancher/k3s/server/manifests/tretboot.yaml https://raw.githubusercontent.com/Deltachaos/tretboot/main/tretboot.yaml
+pct exec $id -- wget -O /var/lib/rancher/k3s/server/manifests/tretboot.yaml $tretboot_url
 (cat <<EOF
 ---
 apiVersion: v1
