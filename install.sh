@@ -130,7 +130,7 @@ while true; do
           repo: "${fleet_repo}"
           branch: "${fleet_branch}"
           path: "${fleet_path}"
-          auth: "${fleet_auth}"
+          auth: ${fleet_auth}
 $configmap_extra_repositories
 EOF
 )"

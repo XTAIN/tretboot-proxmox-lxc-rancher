@@ -17,7 +17,5 @@ spec:
     - {{ $data.path | quote }}
 {{ end }}
   repo: {{ $data.repo | quote }}
-  targets:
-    - clusterName: local
 ---
 {{- end }}

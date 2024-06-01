@@ -12,6 +12,4 @@ spec:
   paths:
     - local/*
   repo: {{ .Values.repository.url | quote }}
-  targets:
-    - clusterName: local
   {{ end }}
