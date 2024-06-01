@@ -117,15 +117,35 @@ while true; do
   fi
 
   configmap_extra_repositories="$(cat - <<EOF
-    - repo: "${fleet_repo}"
-      branch: "${fleet_branch}"
-      path: "${fleet_path}"
+      - repo: "${fleet_repo}"
+        branch: "${fleet_branch}"
+        path: "${fleet_path}"
 $configmap_extra_repositories
 EOF
 )"
 
   ((i++))
 done
+
+configmap_git_ssh=""
+if [ "${fleet_ssh_key}" ]; then
+  temp_private_key=$(mktemp)
+  chmod 600 "$temp_private_key"
+  echo "${!fleet_ssh_key}" > "$temp_private_key"
+  temp_public_key=$(mktemp)
+
+  ssh-keygen -y -f "$temp_private_key" > "$temp_public_key"
+  fleet_ssh_key_public=$(cat "$temp_public_key")
+  rm -f "$temp_public_key"
+  rm -f "$temp_private_key"
+
+  fleet_ssh_key_public=
+  configmap_git_ssh="$(cat - <<EOF
+    ssh: {"private": "${fleet_ssh_key}","public":"${fleet_ssh_key_public}"}
+EOF
+)"
+fi
+
 
 pct create $id $storage:vztmpl/$image --cores 2 --memory 4096 --swap 2048 --rootfs ${storage}:${size} --hostname=$hostname --onboot 1
 (cat <<EOF
@@ -194,6 +214,7 @@ data:
     extraRepositories:
 $configmap_extra_repositories
 $configmap_proxmox_api
+$configmap_git_ssh
 EOF
 ) | pct exec $id -- tee -a /var/lib/rancher/k3s/server/manifests/tretboot.yaml
 pct exec $id -- ln -s /usr/local/bin/k3s /usr/bin/k3s
