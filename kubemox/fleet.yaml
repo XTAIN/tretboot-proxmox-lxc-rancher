@@ -1,9 +1,8 @@
 defaultNamespace: kubemox
 
 helm:
-  chart: kubemox
-  repo: https://alperencelik.github.io/helm-charts
-  version: 0.2.1
+  chart: git::https://github.com/alperencelik/kubemox//charts/kubemox?ref=main
+  version: 0.1.0
 
   values:
     proxmox:
