@@ -139,17 +139,6 @@ EOF
   ((i++))
 done
 
-configmap_kubemox=""
-if [ "${proxmox_api}" == "1" ]; then
-  configmap_kubemox="$(cat - <<EOF
-      kubemox:
-          repo: "${repository}"
-          branch: "main"
-          path: "kubemox"
-EOF
-)"
-fi
-
 configmap_git_ssh=""
 if [ "${fleet_ssh_key}" ]; then
   temp_private_key=$(mktemp)
@@ -234,7 +223,6 @@ data:
     repository:
       url: "$repository"
     extraRepositories:
-$configmap_kubemox
 $configmap_extra_repositories
 $configmap_proxmox_api
 $configmap_git_ssh
