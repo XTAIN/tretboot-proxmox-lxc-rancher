@@ -1,4 +1,4 @@
-defaultNamespace: metacontroller
+defaultNamespace: metacrtl
 
 helm:
   chart: oci://ghcr.io/metacontroller/metacontroller-helm

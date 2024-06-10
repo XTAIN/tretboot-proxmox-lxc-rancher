@@ -2,7 +2,7 @@
 apiVersion: fleet.cattle.io/v1alpha1
 kind: GitRepo
 metadata:
-  name: tretboot-fleet
+  name: tb
 spec:
   branch: {{ .Values.repository.branch | quote }}
   correctDrift:
@@ -12,4 +12,4 @@ spec:
   paths:
     - local/*
   repo: {{ .Values.repository.url | quote }}
-  {{ end }}
+{{ end }}
