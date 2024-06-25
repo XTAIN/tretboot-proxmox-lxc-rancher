@@ -62,7 +62,7 @@ fi;
 
 size=${size:-64}
 tretboot_url=${tretboot_url:-https://raw.githubusercontent.com/Deltachaos/tretboot/main/tretboot.yaml}
-repository=${repository:-https://github.com/Deltachaos/tretboot-proxmox-lxc-rancher.git}
+repository=${repository:-https://github.com/XTAIN/tretboot-proxmox-lxc-rancher.git}
 image=${image:-ubuntu-24.04-standard_24.04-2_amd64.tar.zst}
 k3s_version=${k3s_version:-v1.28.10+k3s1}
 
