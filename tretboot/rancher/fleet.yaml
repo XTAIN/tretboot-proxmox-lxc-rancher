@@ -6,3 +6,6 @@ helm:
   disableUpdate: true
   values:
     hostname: rancher
+    ingress:
+      tls:
+        source: letsEncrypt	
