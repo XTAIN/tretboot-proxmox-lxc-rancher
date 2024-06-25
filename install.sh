@@ -168,6 +168,9 @@ EOF
 ) | cat - >> /etc/pve/lxc/$id.conf
 pct start $id
 pct set $id --net0 $network
+if [ "$nameserver" ]; then
+  pct set $id --nameserver $nameserver
+fi
 pct exec $id -- mkdir -p /var/lib/rancher/k3s/server/manifests
 pct exec $id -- mkdir -p /etc/rancher/k3s
 (cat <<EOF
